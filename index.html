@@ -2,6 +2,481 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-  <h1>this is the index page</h1>
-  </head>
-  </html>
+  <title>FUS Sites by indication</title>
+  <style>
+    html, 
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #viewDiv {
+      float: left;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 80%;
+    }
+    
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  #feature-node {
+        float: left;
+        width: 20%;
+        height: 100%;
+        padding-left: 10px;
+        
+      }
+  </style>
+
+  <!-- default arcgis light css for page -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+
+  <!-- arcgis library import -->
+  <script src="https://js.arcgis.com/4.21/"></script>
+
+  <!-- jquery import -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+  <!-- creating json array of data for legend -->
+  <script type="text/javascript">
+  var conditionLayer;
+  const data = [{value: "Back Pain",
+  label: "Back Pain",
+  uid: "1",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#7fffd4",
+      size: "10px"
+  }
+}, {
+  value: "Benign Prostatic Hyperplasia",
+  label: "Benign Prostatic Hyperplasia",
+  uid: "2",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#808080",
+      size: "10px"
+  }
+}, 
+{
+  value: "Bone Metastasis",
+  label: "Bone Metastasis",
+  uid: "3",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#8b0000",
+      size: "10px"
+  }
+},
+{
+  value: "Bone Tumors",
+  label: "Bone Tumors",
+  uid: "4",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#808000",
+      size: "10px"
+  }
+},
+{
+  value: "Brain Tumors, Glioma and Metastatic",
+  label: "Brain Tumors, Glioma and Metastatic",
+  uid: "5",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#483d8b",
+      size: "10px"
+  }
+},
+{
+  value: "Breast Cancer",
+  label: "Breast Cancer",
+  uid: "6",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ffc0cb",
+      size: "10px"
+  }
+},
+{
+  value: "Breast Fibroadenoma",
+  label: "Breast Fibroadenoma",
+  uid: "7",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#008000",
+      size: "10px"
+  }
+},
+{
+  value: "Depression",
+  label: "Depression",
+  uid: "8",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#000080",
+      size: "10px"
+  }
+},
+  {
+  value: "Desmoid Tumors",
+  label: "Desmoid Tumors",
+  uid: "9",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#9acd32",
+      size: "10px"
+  }
+}, {
+  value: "Essential Tremor",
+  label: "Essential Tremor",
+  uid: "10",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#8b008b",
+      size: "10px"
+  }
+}, 
+{
+  value: "Glaucoma",
+  label: "Glaucoma",
+  uid: "11",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#b03060",
+      size: "10px"
+  }
+},
+{
+  value: "Kidney Tumors",
+  label: "Kidney Tumors",
+  uid: "12",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ff4500",
+      size: "10px"
+  }
+},
+{
+  value: "Lichen Sclerosis",
+  label: "Lichen Sclerosis",
+  uid: "13",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ffa500",
+      size: "10px"
+  }
+},
+{
+  value: "Liver Tumors",
+  label: "Liver Tumors",
+  uid: "14",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ffff00",
+      size: "10px"
+  }
+},
+{
+  value: "Neuropathic Pain",
+  label: "Neuropathic Pain",
+  uid: "15",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#00ff00",
+      size: "10px"
+  }
+},
+{
+  value: "Obsessive Compulsive Disorder (OCD)",
+  label: "Obsessive Compulsive Disorder (OCD)",
+  uid: "16",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#8a2be2",
+      size: "10px"
+  }
+},
+{
+  value: "Osteoid Osteoma",
+  label: "Osteoid Osteoma",
+  uid: "17",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ee82ee",
+      size: "10px"
+  }
+}, 
+{
+  value: "Pancreatic Tumors",
+  label: "Pancreatic Tumors",
+  uid: "18",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#00ff7f",
+      size: "10px"
+  }
+},
+{
+  value: "Parkinson's Disease",
+  label: "Parkinson's Disease",
+  uid: "19",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#00bfff",
+      size: "10px"
+  }
+},
+{
+  value: "Prostate Tumors",
+  label: "Prostate Tumors",
+  uid: "20",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#0000ff",
+      size: "10px"
+  }
+},
+{
+  value: "Soft Tissue Tumor",
+  label: "Soft Tissue Tumor",
+  uid: "21",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#ff00ff",
+      size: "10px"
+  }
+},
+{
+  value: "Thyroid Nodules",
+  label: "Thyroid Nodules",
+  uid: "22",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#1e90ff",
+      size: "10px"
+  }
+},
+{
+  value: "Uterine Adenomyosis",
+  label: "Uterine Adenomyosis",
+  uid: "23",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#f0e68c",
+      size: "10px"
+  }
+},
+  {
+  value: "Uterine Fibroids",
+  label: "Uterine Fibroids",
+  uid: "24",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#fa8072",
+      size: "10px"
+  }
+}, {
+  value: "Varicose Veins",
+  label: "Varicose Veins",
+  uid: "25",
+  symbol: {
+      type: "simple-marker",
+      style: "circle",
+      color: "#b0e0e6",
+      size: "10px"
+  }
+
+  }];
+</script>
+
+<!-- main js functions -->
+  <script>
+    require([
+      "esri/config",
+      "esri/Map",
+      "esri/views/SceneView",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Locate"
+
+  ], 
+  
+  function(esriConfig,Map, SceneView,FeatureLayer,Locate) {
+
+    esriConfig.apiKey = "AAPK9dcac5f3dbb74f4e924ea2b8be48fd1bL0juwLZcptMZ_z2QomWaZbSPJ2dSWgA4a3Zsh7SSWwqkAWDtnYQng7M8dNkjZyiD";  
+
+    const map = new Map({
+      basemap: "hybrid", //Basemap layer service
+    });
+
+    const indications = {}
+
+
+   //Build renderer 
+   const conditionRenderer = {
+          type: "unique-value",
+          legendOptions: {
+            title: "By Indication"
+          },
+          field: "Indication",
+
+          uniqueValueInfos: data,
+        }
+
+
+      //setup pop-ups
+      const popupCondition = {
+        "title": "{Name}",
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
+      }
+
+     //Jquery to build indication checkboxes 
+      $.each(data, function () {
+        $("#feature-node").append($("<div>").prop('id', this.uid).append($("<label>").text(this.label).prepend(
+            $("<input>").attr('type', 'checkbox').val(this.value)
+               .prop('checked', true)
+               .prop('name', "checkbox")
+               .prop('class', this.value)
+               
+        )));
+        $('#' + this.uid).prepend($("<span>")
+          .css('width', "10px")
+          .css('height', "10px")
+          .css('border-radius', "50%")
+          .css('border', "1px solid black")
+          .css('background-color', this.symbol.color)
+          .css('display', "inline-block"));
+       
+    });
+    $("#feature-node").append($("<br>"));
+     $("#feature-node").append($("<input>").attr({type: 'button', id: 'filterButton', value: 'Filter', onclick: 'filterFunction()'}));
+     $("#feature-node").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear', onclick: 'clearFunction()'}));
+     $("#feature-node").append($("<input>").attr({type: 'button', id: 'resetButton', value: 'Reset', onclick: 'resetFunction()'}));
+
+
+    
+//Add Feature layer
+conditionLayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/globe_data_commercial_treatment_only/FeatureServer",
+    renderer: conditionRenderer,
+    id: "condition",
+    title: "Sites by Condition",
+    visible: true,
+    popupTemplate: popupCondition
+  });
+
+ 
+   map.add(conditionLayer);
+
+    const view = new SceneView({
+      container: "viewDiv",
+      map: map,
+      widthBreakpoint: 'xlarge',
+      camera: {
+        position: {
+          x: -118.808, //Longitude
+          y: 33.961, //Latitude
+          z: 10000000 //Meters
+        },
+        
+      }
+      });
+ 
+  //Add items to page
+    // Add the locate widget to the top left corner of the view, to find your current location
+      const locateBtn = new Locate({
+          view: view
+        });
+        view.ui.add(locateBtn, {
+          position: "top-left"
+        });
+});
+
+function filterFunction() {
+  //Determine which items have been checked and filter based on that
+  var queryString;
+  var itemCount = 0;
+  var currentItem;
+  const checkboxes = document.querySelectorAll(`input[name=checkbox]:checked`);
+    let values = [];
+    checkboxes.forEach((checkbox) => {
+        itemCount += 1;
+        currentItem = checkbox.value
+        
+        //need to double up so SQL will recognize '
+        currentItem = currentItem.replace('\'','\'\'');
+        if (itemCount <2) {
+          queryString = "Indication = '" + currentItem + "'";
+        }
+        else{
+          queryString += " OR Indication =  '" + currentItem + "'";
+        }
+    });
+
+    if (queryString != null) //Do nothing if they hit filter with nothing checked.
+    {
+       conditionLayer.definitionExpression = queryString;
+    }else{
+       conditionLayer.definitionExpression = "Indication = ''";
+    }
+  
+}
+function clearFunction() {
+  //Set all checkboxes to empty and run blank query
+  var ele=document.getElementsByName('checkbox');  
+                for(var i=0; i<ele.length; i++){  
+                    if(ele[i].type=='checkbox')  
+                        ele[i].checked=false;  
+                }  
+  conditionLayer.definitionExpression = "Indication = ''";
+}
+function resetFunction() {
+  //set all checkboxes to checked and select all indications
+  var ele=document.getElementsByName('checkbox');  
+                for(var i=0; i<ele.length; i++){  
+                    if(ele[i].type=='checkbox')  
+                        ele[i].checked=true;  
+                }  
+    conditionLayer.definitionExpression = "";
+}
+
+
+  </script>
+
+</head>
+<body>
+  <div id="feature-node" class="esri-widget">
+    <h2>Indications</h2>
+  </div>
+  <div id="viewDiv"></div>
+</body>
+</html>
