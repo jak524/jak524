@@ -1,0 +1,134 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>ArcGIS API for JavaScript Tutorials: Display a scene</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.21/"></script>
+
+  <script>
+    require([
+      "esri/config",
+      "esri/Map",
+      "esri/views/SceneView",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Locate",
+      "esri/widgets/LayerList"
+  ], function(esriConfig,Map, SceneView,FeatureLayer,Locate,LayerList) {
+
+    esriConfig.apiKey = "AAPK9dcac5f3dbb74f4e924ea2b8be48fd1bL0juwLZcptMZ_z2QomWaZbSPJ2dSWgA4a3Zsh7SSWwqkAWDtnYQng7M8dNkjZyiD";
+
+    const map = new Map({
+      basemap: "hybrid", //Basemap layer service
+    });
+
+    //Setup Layers
+
+    //Build renderer for research sites
+    const researchRenderer = {
+        "type": "simple",
+        "symbol": {
+          "type": "simple-marker",
+          "style": "triangle",
+          "color": "blue",
+          "size": "10px"
+        }
+      };
+
+    //Build renderer for treatment sites
+    const treatmentRenderer = {
+        "type": "simple",
+        "symbol": {
+          "type": "simple-marker",
+          "style": "circle",
+          "color": "red",
+          "size": "10px"
+        }
+      };
+      //setup pop-ups
+      const popupResearchSites = {
+        "title": "{Name}",
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
+      }
+      const popupTreatmentSites = {
+        "title": "{Name}",
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
+      }
+//Add Feature layer
+const researchLayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Research_Sites/FeatureServer",
+    renderer: researchRenderer,
+    id: "research",
+    title: "Research Sites",
+    visible: true,
+    popupTemplate: popupResearchSites
+  });
+
+ 
+  //Add Feature layer
+const treatmentLayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Treatment_Sites/FeatureServer",
+    renderer: treatmentRenderer,
+    id: "treatment",
+    title: "Treatment Sites",
+    visible: true,
+    popupTemplate: popupTreatmentSites
+  });
+
+  map.add(researchLayer);
+  map.add(treatmentLayer);
+
+
+    const view = new SceneView({
+      container: "viewDiv",
+      map: map,
+      camera: {
+        position: {
+          x: -118.808, //Longitude
+          y: 33.961, //Latitude
+          z: 10000000 //Meters
+        },
+        
+      }
+      });
+  //Add Layer List 
+      view.when(() => {
+          const layerList = new LayerList({
+              view: view,
+      });
+
+
+  // Add widget to the top right corner of the view
+       view.ui.add(layerList, "top-right");
+      });
+  //Add items to page
+    // Add the locate widget to the top left corner of the view, to find your current location
+      const locateBtn = new Locate({
+          view: view
+        });
+        view.ui.add(locateBtn, {
+          position: "top-left"
+        });
+        
+        
+});
+  </script>
+
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>
