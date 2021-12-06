@@ -40,14 +40,16 @@
   <script src="https://js.arcgis.com/4.21/"></script>
 
   <!-- jquery import -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <!-- creating json array of data for legend -->
   <script type="text/javascript">
   var conditionLayer;
+  
   const data = [{value: "Back Pain",
   label: "Back Pain",
   uid: "1",
+  count: 5,
   symbol: {
       type: "simple-marker",
       style: "circle",
@@ -326,11 +328,12 @@
       "esri/Map",
       "esri/views/SceneView",
       "esri/layers/FeatureLayer",
-      "esri/widgets/Locate"
+      "esri/widgets/Locate",
+      "esri/widgets/Search"
 
   ], 
   
-  function(esriConfig,Map, SceneView,FeatureLayer,Locate) {
+  function(esriConfig,Map, SceneView,FeatureLayer,Locate,Search) {
 
     esriConfig.apiKey = "AAPK9dcac5f3dbb74f4e924ea2b8be48fd1bL0juwLZcptMZ_z2QomWaZbSPJ2dSWgA4a3Zsh7SSWwqkAWDtnYQng7M8dNkjZyiD";  
 
@@ -356,7 +359,7 @@
       //setup pop-ups
       const popupCondition = {
         "title": "{Name}",
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
+        "content": "<Table><TR><TD><b>Indication(s):</b></TD><TD>{Indication_List}</TD></TR><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
       }
 
      //Jquery to build indication checkboxes 
@@ -386,7 +389,7 @@
     
 //Add Feature layer
 conditionLayer = new FeatureLayer({
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/globe_data_commercial_treatment_only/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Globe_data_with_ind_list/FeatureServer",
     renderer: conditionRenderer,
     id: "condition",
     title: "Sites by Condition",
@@ -410,7 +413,11 @@ conditionLayer = new FeatureLayer({
         
       }
       });
- 
+      const searchWidget = new Search({
+          view: view,
+          
+        });
+  view.ui.add(searchWidget, "top-right"); //Add to the map
   //Add items to page
     // Add the locate widget to the top left corner of the view, to find your current location
       const locateBtn = new Locate({
@@ -420,6 +427,7 @@ conditionLayer = new FeatureLayer({
           position: "top-left"
         });
 });
+
 
 function filterFunction() {
   //Determine which items have been checked and filter based on that
