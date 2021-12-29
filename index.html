@@ -389,7 +389,8 @@
     
 //Add Feature layer
 conditionLayer = new FeatureLayer({
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Globe_data_with_ind_list/FeatureServer",
+    //URL comes from content page on arcgis.com for this particular layer, it needs to be public
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Globe_Data12_29_2021/FeatureServer",
     renderer: conditionRenderer,
     id: "condition",
     title: "Sites by Condition",
