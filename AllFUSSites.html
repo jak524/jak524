@@ -67,11 +67,16 @@
 
   <!-- jquery import -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+  <script src="jquery-csv.js"></script>
   <!-- creating json array of data for legend -->
   <script type="text/javascript">
   var conditionLayer;
-  var infos;
+  //var infos;
+  var originalList;
+  var infos2;
+
+ 
  </script>
 
 <!-- main js functions -->
@@ -87,7 +92,7 @@
 
   ], 
   
-  function(esriConfig,Map, SceneView,FeatureLayer,Locate,Search,uniqueValues) {
+  function (esriConfig,Map, SceneView,FeatureLayer,Locate,Search,uniqueValues) {
 
     esriConfig.apiKey = "AAPK9dcac5f3dbb74f4e924ea2b8be48fd1bL0juwLZcptMZ_z2QomWaZbSPJ2dSWgA4a3Zsh7SSWwqkAWDtnYQng7M8dNkjZyiD";  
 
@@ -98,7 +103,7 @@
     const indications = {}
 
 
-   //Build renderer 
+   //Build renderer, in this version, all red circles
 
       const conditionRenderer = {
         "type": "simple",
@@ -115,13 +120,12 @@
         "title": "{Name}",
         "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
       }
-
-     
+  
     
 //Add Feature layer
 conditionLayer = new FeatureLayer({
     //URL comes from content page on arcgis.com for this particular layer, it needs to be public
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_1_6_2022/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_1_14_2022/FeatureServer",
     renderer: conditionRenderer,
     id: "condition",
     title: "Sites by Condition",
@@ -129,45 +133,108 @@ conditionLayer = new FeatureLayer({
     popupTemplate: popupCondition
   });
 
- //Get list of all indications
-
+ //ArcGIS Function that produces a list of unique values on the layer, runs first time on its own.
 uniqueValues({
   layer: conditionLayer,
   field: "Indication",
-
   view: map
   }).then(function (response) {
-    // prints each unique value and the count of features containing that value
+    // prints each unique value and the count of features containing that value for building checkboxes in left menu
+    console.log("Original UV");
     this.infos = response.uniqueValueInfos;
-    //console.log(this.infos);
+    originalList = response.uniqueValueInfos;
     $.each(this.infos, function () {
-      var $featureNode = $("#feature-node").get();
-      var $label = $("<label>").text(this.value);
-      //console.log(this.count);
-      //var $count = $(this.count);
-      $("#feature-node").append($("<div>").append($($label).append( " (" + this.count + ")").prepend(
-        $("<input>").attr('type', 'checkbox').val(this.value).attr('onClick','filterFunction()')
-          .prop('checked', true)
-          .prop('name', "checkbox")
-          .prop('class', this.value)
-    )));
-  //$("#feature-node").append(this.count);
-  });
+      var currentValue = this.value;
+        $("#feature-node").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        });
+        var cbByIndication = document.querySelectorAll("input[type=checkbox][name=checkbox]");
+
+    //Use Array.forEach to add an event listener to each checkbox.
+    //Needs to be here to ensure it fires after the checkboxes are created
+ 
+    cbByIndication.forEach(function(checkbox2) {
+    checkbox2.addEventListener('change', function() {
+      //if checkbox changes run filter then unique values functions
+      console.log("Condition Checked/unchecked)")
+      var forUV = filter();  
+      uv(forUV);
+  })
+});
 });
 
 //add filter checkboxes for IDType
 
-$("#menu").append('<input type="checkbox" id="Commercial" name="typeID" checked="true" value="0122A000000s3qgQAA" onClick="filterByType()">').append('<label for="Commercial">Commercial</label></div>');
-$("#menu").append('<input type="checkbox" id="Clinical" name="typeID" checked="true" value="0122A000000s3qfQAA" onClick="filterByType()"">').append('<label for="Clinical">Clinical</label></div>');
-$("#menu").append('<input type="checkbox" id="Pre-Clinical" name="typeID" checked="true" value="0122A000000s3qiQAA" onClick="filterByType()"">').append('<label for="Pre-Clinical">Pre-Clinical</label></div><br>');
+$("#menu").append('<input type="checkbox" id="Commercial" name="typeID" checked="true" value="0122A000000s3qgQAA">').append('<label for="Commercial">Commercial</label></div>');
+$("#menu").append('<input type="checkbox" id="Clinical" name="typeID" checked="true" value="0122A000000s3qfQAA">').append('<label for="Clinical">Clinical</label></div>');
+$("#menu").append('<input type="checkbox" id="Pre-Clinical" name="typeID" checked="true" value="0122A000000s3qiQAA">').append('<label for="Pre-Clinical">Pre-Clinical</label></div><br>');
 
 
+
+//listen for ID Type checkbox changes
+var cbByType = document.querySelectorAll("input[type=checkbox][name=typeID]");
+// Use Array.forEach to add an event listener to each checkbox.
+cbByType.forEach(function(checkbox) {
+  checkbox.addEventListener('change', function() {
+    console.log("Type Checked/unchecked)")
+    var forUV = filter();  
+    uv(forUV);
+
+  })
+});
+
+//function to get unique values of features available on conditionLayer  the original one just runs the first time the page is loaded
+function uv (bool){
+  if(bool){
+  uniqueValues({
+    layer: conditionLayer,
+    field: "Indication",
+    view: map
+    }).then(function (response) {
+      // prints each unique value and the count of features containing that value
+      console.log("New UV");
+      this.infos2 = response.uniqueValueInfos;
+      for(var i=0; i<originalList.length; i++){
+        var found = false;
+        var originalValue = originalList[i].value;
+            $.each(infos2, function () {
+                var filteredValue = this.value;
+         
+                if(originalList[i].value == this.value){
+                    //Original list is first array of conditions with page loads
+                    //filtered is currently displayed array of conditions
+                    //If filtered list doesn't contain a value in original list, count should be 0, otherwise take count from new filtered value
+                    document.getElementById("lbl" + this.value).innerHTML = this.value + " (" + this.count + ")";
+                    found = true;
+                    return false;
+                 }
+                });
+            if(found == false){  //condition isn't in this dataset so set count to 0
+                console.log("Condition set to 0")
+                document.getElementById("lbl" + originalList[i].value).innerHTML = originalList[i].value + " (" + 0 + ")"; 
+                
+            }
+    }
+ }); 
+}  
+ else{ 
+   console.log("False returned");
+  for(var i=0; i<originalList.length; i++){
+      document.getElementById("lbl" + originalList[i].value).innerHTML = originalList[i].value + " (" + 0 + ")";
+  }
+}
+};
 //setup buttons
     $("#menu").append($("<br>"));
- //    $("#menu").append($("<input>").attr({type: 'button', id: 'filterButton', value: 'Filter', onclick: 'filterFunction()'}));
-     $("#menu").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear', onclick: 'clearFunction()'}));
-     $("#menu").append($("<input>").attr({type: 'button', id: 'selectAllButton', value: 'Select All', onclick: 'selectAllFunction()'}));
+    $("#menu").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear'}));
+    $("#menu").append($("<input>").attr({type: 'button', id: 'selectAllButton', value: 'Select All'}));
+    document.getElementById("clearButton").addEventListener("click",function(){
+      clearFunction();
+    });
+    document.getElementById("selectAllButton").addEventListener("click",function(){
+      selectAllFunction();
+    });
 
+    
    map.add(conditionLayer);
 
     const view = new SceneView({
@@ -183,6 +250,7 @@ $("#menu").append('<input type="checkbox" id="Pre-Clinical" name="typeID" checke
         
       }
       });
+     
       const searchWidget = new Search({
           view: view,
           
@@ -196,20 +264,45 @@ $("#menu").append('<input type="checkbox" id="Pre-Clinical" name="typeID" checke
         view.ui.add(locateBtn, {
           position: "top-left"
         });
-});
+
+
+//Main filter function, calls other filters
+function filter () {
+var byIndication = filterFunction();
+var byTypeID = filterByType();
+var queryString = "Indication = ''";
+//if either are blank, run a query that will clear all results
+if (byTypeID == "" || byIndication == ""){
+  conditionLayer.definitionExpression = queryString;
+  console.log("no type or indication QS");
+  return true;
+}
+//if (byIndication == ""){
+ //       console.log("no Condition");
+        //conditionLayer.visible = false;
+ //       queryString = byTypeID;
+ //   }
+    else{
+       // conditionLayer.visible = true;
+        queryString = "(" + byIndication + ") AND " + "(" + byTypeID + ")" ;
+    }
+console.log("Running Filter QS=");
+conditionLayer.definitionExpression = queryString;
+return true;
+};
 
 
 function filterFunction() {
   //Determine which items have been checked and filter based on that
-  var queryString;
+  var queryString = "";
   var itemCount = 0;
   var currentItem;
   const checkboxes = document.querySelectorAll(`input[name=checkbox]:checked`);
     let values = [];
     checkboxes.forEach((checkbox) => {
         itemCount += 1;
-        currentItem = checkbox.value
-        
+        currentItem = checkbox.value;
+       
         //need to double up so SQL will recognize '
         currentItem = currentItem.replace('\'','\'\'');
         if (itemCount <2) {
@@ -219,14 +312,8 @@ function filterFunction() {
           queryString += " OR Indication =  '" + currentItem + "'";
         }
     });
+return queryString;
 
-    if (queryString != null) //Do nothing if they hit filter with nothing checked.
-    {
-       conditionLayer.definitionExpression = queryString;
-    }else{
-       conditionLayer.definitionExpression = "Indication = ''";
-    }
-  
 }
 function clearFunction() {
   //Set all checkboxes to empty and run blank query
@@ -235,7 +322,9 @@ function clearFunction() {
                     if(ele[i].type=='checkbox')  
                         ele[i].checked=false;  
                 }  
-  conditionLayer.definitionExpression = "Indication = ''";
+  //conditionLayer.definitionExpression = "Indication = ''";
+  var forUV = filter();  
+  uv(forUV);
 }
 function selectAllFunction() {
   //set all checkboxes to checked and select all indications
@@ -244,11 +333,12 @@ function selectAllFunction() {
                     if(ele[i].type=='checkbox')  
                         ele[i].checked=true;  
                 }  
-   conditionLayer.definitionExpression = "";
+    var forUV = filter();  
+    uv(forUV);
 }
 function filterByType() {
   //Determine which Types have been checked
-  var queryString;
+  var queryString = "";
   var itemCount = 0;
   var currentItem;
   const checkboxes = document.querySelectorAll(`input[name=typeID]:checked`);
@@ -267,15 +357,9 @@ function filterByType() {
         }
     });
 
-    if (queryString != null) //Do nothing if they hit filter with nothing checked.
-    {
-       conditionLayer.definitionExpression = queryString;
-    }else{
-       conditionLayer.definitionExpression = "RecordType = ''";
-    }
-  
+return queryString;
 }
-
+});
   </script>
 
 <body>
