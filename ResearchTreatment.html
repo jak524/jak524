@@ -14,6 +14,7 @@
     border: 1px solid black;
     border-collapse: collapse;
   }
+  
   </style>
 
   <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
@@ -27,8 +28,9 @@
       "esri/layers/FeatureLayer",
       "esri/widgets/Locate",
       "esri/widgets/LayerList",
-      "esri/widgets/Search"
-  ], function(esriConfig,Map, SceneView,FeatureLayer,Locate,LayerList,Search) {
+      "esri/widgets/Search",
+      "esri/widgets/Legend"
+  ], function(esriConfig,Map, SceneView,FeatureLayer,Locate,LayerList,Search,Legend) {
 
     esriConfig.apiKey = "AAPK9dcac5f3dbb74f4e924ea2b8be48fd1bL0juwLZcptMZ_z2QomWaZbSPJ2dSWgA4a3Zsh7SSWwqkAWDtnYQng7M8dNkjZyiD";
 
@@ -62,16 +64,16 @@
       //setup pop-ups
       const popupResearchSites = {
         "title": "{Name}",
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
       }
       const popupTreatmentSites = {
         "title": "{Name}",
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
       }
       
 //Add Feature layer
 const researchLayer = new FeatureLayer({
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Research_Sites/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/ResearchSites_1_14_2022/FeatureServer",
     renderer: researchRenderer,
     id: "research",
     title: "Research Sites",
@@ -82,7 +84,7 @@ const researchLayer = new FeatureLayer({
  
   //Add Feature layer
 const treatmentLayer = new FeatureLayer({
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/Treatment_Sites/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/TreatmentSites1_14_2022/FeatureServer",
     renderer: treatmentRenderer,
     id: "treatment",
     title: "Treatment Sites",
@@ -110,6 +112,7 @@ const treatmentLayer = new FeatureLayer({
       view: view
     });
     view.ui.add(search, "top-right"); //Add to the map
+    
 
   //Add Layer List 
       view.when(() => {
@@ -117,7 +120,12 @@ const treatmentLayer = new FeatureLayer({
               view: view,
       });
 
+  const legend = new Legend({
+  view: view,
 
+});
+
+view.ui.add(legend, "top-right");
   // Add widget to the top right corner of the view
        view.ui.add(layerList, "top-right");
       });
@@ -129,7 +137,7 @@ const treatmentLayer = new FeatureLayer({
         view.ui.add(locateBtn, {
           position: "top-left"
         });
-        
+   
         
 });
   </script>

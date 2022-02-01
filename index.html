@@ -359,7 +359,8 @@
       //setup pop-ups
       const popupCondition = {
         "title": "{Name}",
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
+       // "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>EMail:</b></TD><TD>{EMail}</TD></TR><TR><TD><b>Phone:</b></TD><TD>{Phone}</TD></TR><TR><TD><b>FUSF Website:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
+       "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
       }
 
      //Jquery to build indication checkboxes 
@@ -381,11 +382,23 @@
        
     });
     $("#feature-node").append($("<br>"));
-     $("#feature-node").append($("<input>").attr({type: 'button', id: 'filterButton', value: 'Filter', onclick: 'filterFunction()'}));
+     //$("#feature-node").append($("<input>").attr({type: 'button', id: 'filterButton', value: 'Filter', onclick: 'filterFunction()'}));
      $("#feature-node").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear', onclick: 'clearFunction()'}));
      $("#feature-node").append($("<input>").attr({type: 'button', id: 'resetButton', value: 'Reset', onclick: 'resetFunction()'}));
 
+    var cbByIndication = document.querySelectorAll("input[type=checkbox][name=checkbox]");
 
+//Use Array.forEach to add an event listener to each checkbox.
+//Needs to be here to ensure it fires after the checkboxes are created
+
+cbByIndication.forEach(function(checkbox2) {
+checkbox2.addEventListener('change', function() {
+  //if checkbox changes run filter then unique values functions
+  console.log("Condition Checked/unchecked)")
+  var forUV = filterFunction();  
+  //uv(forUV);
+})
+});
     
 //Add Feature layer
 conditionLayer = new FeatureLayer({
