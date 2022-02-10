@@ -3,6 +3,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>FUS Sites by indication</title>
+  <link rel="icon" type="image/x-icon" href="https://fusf.maps.arcgis.com/sharing/rest/content/items/b60cc2dbb64045bd9bae75356951ebc1/data" />
   <style>
     html, 
     body {
@@ -11,7 +12,12 @@
       height: 100%;
       width: 100%;
     }
-    
+    #rt{
+      padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+    }
     #viewDiv {
       float: left;
       padding: 0;
@@ -19,7 +25,12 @@
       height: 100%;
       width: 80%;
     }
+      #logoDiv {
+       width: 100%;
+       height: auto;
+       opacity: 0.5;
 
+      }
       
     table, th, td {
     border: 1px solid black;
@@ -28,7 +39,7 @@
   #feature-node {
        float: left;
         width: 20%;
-        height: 90%;
+        height: 100%;
         padding-left: 10px;
         overflow-y: auto;
       }
@@ -166,10 +177,10 @@ uniqueValues({
 });
 
 //add filter checkboxes for IDType
-
+$("#menu").append("<b>Select research stage</b><br>");
 $("#menu").append('<input type="checkbox" id="Commercial" name="typeID" checked="true" value="0122A000000s3qgQAA">').append('<label for="Commercial">Commercial</label></div>');
 $("#menu").append('<input type="checkbox" id="Clinical" name="typeID" checked="true" value="0122A000000s3qfQAA">').append('<label for="Clinical">Clinical</label></div>');
-$("#menu").append('<input type="checkbox" id="Pre-Clinical" name="typeID" checked="true" value="0122A000000s3qiQAA">').append('<label for="Pre-Clinical">Pre-Clinical</label></div><br>');
+$("#menu").append('<input type="checkbox" id="Preclinical" name="typeID" checked="true" value="0122A000000s3qiQAA">').append('<label for="Preclinical">Preclinical</label></div><br>');
 
 
 
@@ -226,8 +237,10 @@ function uv (bool){
   }
 }
 };
-//setup buttons
-    $("#menu").append($("<br>"));
+//setup menu div
+    
+    $("#menu").append($("<h2>Conditions</h2>"));
+    $("#menu").append($("<p>Use the checkboxes below to display focused ultrasound treatment and research sites around the world according to the conditions being addressed.</p>"));
     $("#menu").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear'}));
     $("#menu").append($("<input>").attr({type: 'button', id: 'selectAllButton', value: 'Select All'}));
     document.getElementById("clearButton").addEventListener("click",function(){
@@ -264,6 +277,7 @@ function uv (bool){
       const locateBtn = new Locate({
           view: view
         });
+        view.ui.add("logoDiv", "bottom-right");
         view.ui.add(locateBtn, {
           position: "top-left"
         });
@@ -367,16 +381,10 @@ return queryString;
 
 <body>
   <div id="feature-node" class="esri-widget" style="overflow-y:auto">
-    <div id= "menu" style="height: 10%; width: 20%; display:block; position:fixed;background-color: #FFFFFF; ">
+    <div id= "menu" style="height: 20%; width: 20%; display:block; position:fixed;background-color: #FFFFFF; ">
     </div>
-  </br>
-  </br>
-</br>
-</br>
-</br>
-    <h2>Conditions</h2>
   </div>
-  
+  <div id="logoDiv" class="esri-widget"><img src="https://fusf.maps.arcgis.com/sharing/rest/content/items/fda648e3b9864734a9c18520b6a5ba82/data"></div> 
 </div>
-  <div id="viewDiv"></div>
+  <div id="viewDiv">  </div>
 </body>
