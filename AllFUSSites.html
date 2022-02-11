@@ -12,11 +12,8 @@
       height: 100%;
       width: 100%;
     }
-    #rt{
-      padding-top: 50px;
-  padding-right: 30px;
-  padding-bottom: 50px;
-  padding-left: 80px;
+    p{
+     margin:2; 
     }
     #viewDiv {
       float: left;
@@ -195,10 +192,10 @@ uniqueValues({
 });
 
 //add filter checkboxes for IDType
-$("#menu").append("<b>Select research stage</b><br>");
-$("#menu").append('<input type="checkbox" id="Commercial" name="typeID" checked="true" value="0122A000000s3qgQAA">').append('<label for="Commercial">Commercial</label></div>');
-$("#menu").append('<input type="checkbox" id="Clinical" name="typeID" checked="true" value="0122A000000s3qfQAA">').append('<label for="Clinical">Clinical</label></div>');
-$("#menu").append('<input type="checkbox" id="Preclinical" name="typeID" checked="true" value="0122A000000s3qiQAA">').append('<label for="Preclinical">Preclinical</label></div><br>');
+$("#menu").append("<h3>Select treatment or research stage</h3>");
+$("#menu").append('<input type="checkbox" id="Commercial" name="typeID" checked="true" value="0122A000000s3qgQAA">').append('<label for="Commercial">Patient Treatments</label></div>');
+$("#menu").append('<br><input type="checkbox" id="Clinical" name="typeID" checked="true" value="0122A000000s3qfQAA">').append('<label for="Clinical">Clinical Research</label></div>');
+$("#menu").append('<br><input type="checkbox" id="Preclinical" name="typeID" checked="true" value="0122A000000s3qiQAA">').append('<label for="Preclinical">Preclinical Research</label></div><br>');
 
 
 
@@ -257,7 +254,7 @@ function uv (bool){
 };
 //setup menu div
     
-    $("#menu").append($("<h2>Conditions</h2>"));
+    $("#menu").append($("<h3>Conditions</h3>"));
     $("#menu").append($("<p>Use the checkboxes below to display focused ultrasound treatment and research sites around the world according to the conditions being addressed.</p>"));
     $("#menu").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear'}));
     $("#menu").append($("<input>").attr({type: 'button', id: 'selectAllButton', value: 'Select All'}));
