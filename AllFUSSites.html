@@ -143,7 +143,7 @@
       const popupCondition = {
         "title": "{Name}",
         //"content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR></Table>"      
+        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Treatment Info:</b></TD><TD>{TreatmentInfo}</TD></TR><TR><TD><b>Research Info:</b></TD><TD>{ResearchInfo}</TD></TR></Table>"      
    
       }
 
@@ -152,7 +152,7 @@
 //Add Feature layer
 conditionLayer = new FeatureLayer({
     //URL comes from content page on arcgis.com for this particular layer, it needs to be public
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_1_14_2022/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_3_3_2022/FeatureServer",
     renderer: conditionRenderer,
     id: "condition",
     title: "Sites by Condition",
