@@ -56,7 +56,7 @@
         background-color: #FFFFFF;
       }
 
-      #checkboxes{
+      #checkboxes1, #checkboxes2, #checkboxes3, #checkboxes4, #checkboxes5, #checkboxes6, #checkboxes7, #checkboxes8, #checkboxes9, #checkboxes10, #checkboxes11, #checkboxes12 {
         width: 100%;
         
         overflow-y: auto;
@@ -81,6 +81,70 @@
   #clearButton:hover, #resetButton:hover{
     background-color: #007aff;
   }
+
+  .accordion {
+    color: black;
+    background-color: white;
+  }
+
+  .accordion .container {
+    position: relative;
+    margin: 10px 10px;
+  }
+  
+  /* Positions the labels relative to the .container. Adds padding to the top and bottom and increases font size. Also makes its cursor a pointer */
+  
+  .accordion .label {
+    position: relative;
+    padding: 10px 0;
+    color: black;
+    cursor: pointer;
+  }
+
+
+.accordion .label::before {
+  content: '+';
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+}
+
+/* Hides the content (height: 0), decreases font size, justifies text and adds transition */
+
+.accordion .panel {
+  position: relative;
+  background: white;
+  height: 0;
+  text-align: justify;
+  width: inherit;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+/* Adds a horizontal line between the contents */
+
+.accordion hr {
+  width: 100;
+  margin-left: 0;
+  border: 1px solid grey;
+}
+
+
+/* Unhides the content part when active. Sets the height */
+
+.accordion .container.active .panel {
+  height: 150px;
+}
+
+/* Changes from plus sign to negative sign once active */
+
+.accordion .container.active .label::before {
+  content: '-';
+}
+
+  
   </style>
 
   <!-- default arcgis light css for page -->
@@ -167,12 +231,52 @@ uniqueValues({
   view: map
   }).then(function (response) {
     // prints each unique value and the count of features containing that value for building checkboxes in left menu
-    console.log("Original UV");
+    
     this.infos = response.uniqueValueInfos;
+    var currentIndex = 0;
     originalList = response.uniqueValueInfos;
+    console.log(this.infos);
     $.each(this.infos, function () {
       var currentValue = this.value;
-        $("#checkboxes").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      if(currentIndex <10){
+        $("#checkboxes2").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+
+      else if(currentIndex <20){
+        $("#checkboxes3").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <30){
+        $("#checkboxes4").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <40){
+        $("#checkboxes5").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <50){
+        $("#checkboxes6").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <60){
+        $("#checkboxes7").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <70){
+        $("#checkboxes8").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <80){
+        $("#checkboxes9").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <90){
+        $("#checkboxes10").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <100){
+        $("#checkboxes11").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else if(currentIndex <110){
+        $("#checkboxes12").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      }
+      else{
+        $("#checkboxes1").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+
+      }
+      currentIndex++;
         });
         var cbByIndication = document.querySelectorAll("input[type=checkbox][name=checkbox]");
 
@@ -296,6 +400,30 @@ function uv (bool){
         });
 
 
+
+        var acc = document.getElementsByClassName("container");
+        var panel = document.getElementsByClassName('panel');
+
+for (var i = 0; i < acc.length; i++) {
+    acc[i].onclick = function() {
+    	var setClasses = !this.classList.contains('active');
+        setClass(acc, 'active', 'remove');
+        setClass(panel, 'show', 'remove');
+        
+       	if (setClasses) {
+            this.classList.toggle("active");
+            this.nextElementSibling.classList.toggle("show");
+        }
+    }
+}
+
+function setClass(els, className, fnName) {
+    for (var i = 0; i < els.length; i++) {
+        els[i].classList[fnName](className);
+    }
+}
+
+
 //Main filter function, calls other filters
 function filter () {
 var byIndication = filterFunction();
@@ -396,8 +524,78 @@ return queryString;
   <div id="feature-node" class="esri-widget" style="overflow-y:auto">
     <div id= "menu">
     </div>
-    <div id="checkboxes"></div>
+
+    <div class="accordion-body">
+    <div class="accordion">
+    <div class="container">
+    <div class="label">Cardiovascular</div>
+    <div id="checkboxes1" class="panel"></div>
   </div>
+
+  <div class="container">
+    <div class="label">Digestive</div>
+    <div id="checkboxes2" class="panel"></div>
+  </div>
+
+  <div class="container">
+    <div class="label">Endocrine</div>
+    <div id="checkboxes3" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Integumentary</div>
+    <div id="checkboxes4" class="panel"></div>
+  </div>
+
+  <div class="container">
+    <div class="label">Lymphatic</div>
+    <div id="checkboxes5" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Miscellaneous</div>
+    <div id="checkboxes6" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Musculoskeletal</div>
+    <div id="checkboxes7" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Nervous</div>
+    <div id="checkboxes8" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Opthalamological</div>
+    <div id="checkboxes9" class="panel"></div>
+  </div>
+
+  <div class="container">
+    <div class="label">Reproductive</div>
+    <div id="checkboxes10" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Respiratory</div>
+    <div id="checkboxes11" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Urology</div>
+    <div id="checkboxes12" class="panel"></div>
+  </div>
+  </div>
+</div>
+</div>
   <div id="logoDiv" class="esri-widget"><img src="https://fusf.maps.arcgis.com/sharing/rest/content/items/fda648e3b9864734a9c18520b6a5ba82/data"></div> 
 </div>
   <div id="viewDiv">  </div>
