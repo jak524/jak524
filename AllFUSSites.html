@@ -56,7 +56,7 @@
         background-color: #FFFFFF;
       }
 
-      #checkboxes{
+      #checkboxes1, #checkboxes2, #checkboxes3, #checkboxes4, #checkboxes5, #checkboxes6, #checkboxes7, #checkboxes8, #checkboxes9, #checkboxes10, #checkboxes11, #checkboxes12 {
         width: 100%;
         
         overflow-y: auto;
@@ -81,6 +81,61 @@
   #clearButton:hover, #resetButton:hover{
     background-color: #007aff;
   }
+
+  .accordion {
+    color: black;
+    background-color: white;
+  }
+
+  .accordion .container {
+    position: relative;
+  }
+  
+  /* Positions the labels relative to the .container. Adds padding to the top. Also makes its cursor a pointer */
+  
+  .accordion .label {
+    position: relative;
+    padding: 10px 0;
+    color: black;
+    cursor: pointer;
+  }
+
+
+.accordion .label::before {
+  content: '+';
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+}
+
+/* Hides the content (height: 0), decreases font size, justifies text and adds transition */
+
+.accordion .panel {
+  position: relative;
+  background: white;
+  height: 0;
+  text-align: justify;
+  width: inherit;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+
+/* Unhides the content part when active. Sets the height */
+
+.accordion .container.active .panel {
+  height: auto;
+}
+
+/* Changes from plus sign to negative sign once active */
+
+.accordion .container.active .label::before {
+  content: '-';
+}
+
+  
   </style>
 
   <!-- default arcgis light css for page -->
@@ -152,13 +207,29 @@
 //Add Feature layer
 conditionLayer = new FeatureLayer({
     //URL comes from content page on arcgis.com for this particular layer, it needs to be public
-    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_3_3_2022/FeatureServer",
+    url: "https://services1.arcgis.com/Fi2lZwxhOuzNdfY8/arcgis/rest/services/All_Sites_3_18_2022_mod/FeatureServer",
     renderer: conditionRenderer,
     id: "condition",
     title: "Sites by Condition",
     visible: true,
     popupTemplate: popupCondition
   });
+
+let query = conditionLayer.createQuery();
+query.where = "";
+query.outFields = [ "Indication, Body_System"];
+query.returnDistinctValues = true;
+query.returnGeometry = false;
+
+let indAndBodySys =[];
+conditionLayer.queryFeatures(query)
+  .then(function(response){
+     let temp = response.features;
+     for(let i=0; i< temp.length; i++){
+       indAndBodySys.push(temp[i].attributes);
+     }
+   });
+
 
  //ArcGIS Function that produces a list of unique values on the layer, runs first time on its own.
 uniqueValues({
@@ -167,12 +238,65 @@ uniqueValues({
   view: map
   }).then(function (response) {
     // prints each unique value and the count of features containing that value for building checkboxes in left menu
-    console.log("Original UV");
+    
     this.infos = response.uniqueValueInfos;
+    var currentIndex = 0;
     originalList = response.uniqueValueInfos;
+    
+    for(let i=0; i<indAndBodySys.length; i++){
+      for(let j=0; j<this.infos.length; j++){
+        if(indAndBodySys[i].Indication == this.infos[j].value){
+          this.infos[j].BodySystem = indAndBodySys[i].Body_System;
+          break;
+        }
+      }
+    }
+    //console.log(this.infos);
     $.each(this.infos, function () {
       var currentValue = this.value;
-        $("#checkboxes").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+      if(currentValue != null){
+      switch(this.BodySystem) {
+        case "Cardiovascular":
+        $("#CardiovascularPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+          break;
+
+        case "Endocrine Disorders":
+        $("#EndocrinePanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+          break;
+
+        case "Gastrointestinal":
+        $("#GastrointestinalPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Miscellaneous":
+        $("#MiscellaneousPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Musculoskeletal":
+        $("#MusculoskeletalPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Neurological":
+        $("#NeurologicalPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Ophthalmological":
+        $("#OphthalmologicalPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Pulmonary":
+        $("#PulmonaryPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Urological":
+        $("#UrologicalPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+
+        case "Women's Health":
+        $("#WomenPanel").append('<input type="checkbox" id="' + currentValue +'" name="checkbox" checked="true" value="'+ currentValue + '" >').append('<label id="lbl' + currentValue +'" for="' + currentValue +'">' + currentValue + ' (' + this.count + ')</label></div><BR>');
+        break;
+      }
+    }
         });
         var cbByIndication = document.querySelectorAll("input[type=checkbox][name=checkbox]");
 
@@ -182,7 +306,7 @@ uniqueValues({
     cbByIndication.forEach(function(checkbox2) {
     checkbox2.addEventListener('change', function() {
       //if checkbox changes run filter then unique values functions
-      console.log("Condition Checked/unchecked)")
+      //console.log("Condition Checked/unchecked)")
       var forUV = filter();  
       uv(forUV);
   })
@@ -202,7 +326,7 @@ var cbByType = document.querySelectorAll("input[type=checkbox][name=typeID]");
 // Use Array.forEach to add an event listener to each checkbox.
 cbByType.forEach(function(checkbox) {
   checkbox.addEventListener('change', function() {
-    console.log("Type Checked/unchecked)")
+    //console.log("Type Checked/unchecked)")
     var forUV = filter();  
     uv(forUV);
 
@@ -218,8 +342,9 @@ function uv (bool){
     view: map
     }).then(function (response) {
       // prints each unique value and the count of features containing that value
-      console.log("New UV");
+      //console.log("New UV");
       this.infos2 = response.uniqueValueInfos;
+      //console.log(infos2);
       for(var i=0; i<originalList.length; i++){
         var found = false;
         var originalValue = originalList[i].value;
@@ -236,7 +361,8 @@ function uv (bool){
                  }
                 });
             if(found == false){  //condition isn't in this dataset so set count to 0
-                console.log("Condition set to 0")
+                //console.log("Condition set to 0")
+                //console.log(originalList[i].value);
                 document.getElementById("lbl" + originalList[i].value).innerHTML = originalList[i].value + " (" + 0 + ")"; 
                 
             }
@@ -244,7 +370,7 @@ function uv (bool){
  }); 
 }  
  else{ 
-   console.log("False returned");
+   //console.log("False returned");
   for(var i=0; i<originalList.length; i++){
       document.getElementById("lbl" + originalList[i].value).innerHTML = originalList[i].value + " (" + 0 + ")";
   }
@@ -296,6 +422,19 @@ function uv (bool){
         });
 
 
+
+        const accordion = document.getElementsByClassName('label');
+
+for (i=0; i<accordion.length; i++) {
+  accordion[i].addEventListener('click', function () {
+    let temp = this.parentNode;
+    temp.classList.toggle('active')
+  })
+}
+
+
+
+
 //Main filter function, calls other filters
 function filter () {
 var byIndication = filterFunction();
@@ -304,7 +443,7 @@ var queryString = "Indication = ''";
 //if either are blank, run a query that will clear all results
 if (byTypeID == "" || byIndication == ""){
   conditionLayer.definitionExpression = queryString;
-  console.log("no type or indication QS");
+  //console.log("no type or indication QS");
   return true;
 }
 //if (byIndication == ""){
@@ -316,7 +455,7 @@ if (byTypeID == "" || byIndication == ""){
        // conditionLayer.visible = true;
         queryString = "(" + byIndication + ") AND " + "(" + byTypeID + ")" ;
     }
-console.log("Running Filter QS=");
+//console.log("Running Filter QS=");
 conditionLayer.definitionExpression = queryString;
 return true;
 };
@@ -396,8 +535,73 @@ return queryString;
   <div id="feature-node" class="esri-widget" style="overflow-y:auto">
     <div id= "menu">
     </div>
-    <div id="checkboxes"></div>
+
+    <div class="accordion-body">
+    <div class="accordion">
+
+
+    <div class="container">
+      <div class="label">Cardiovascular</div>
+      <div id="CardiovascularPanel" class="panel"></div>
   </div>
+
+  
+
+  <div class="container"> 
+    <div class="label">Endocrine Disorders</div>
+    <div id="EndocrinePanel" class="panel"></div>
+  </div>
+  
+ 
+
+  <div class="container">
+    <div class="label">Gastrointestinal</div>
+    <div id="GastrointestinalPanel" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Miscellaneous</div>
+    <div id="MiscellaneousPanel" class="panel"></div>
+  </div>
+
+  <div class="container">
+    <div class="label">Musculoskeletal</div>
+    <div id="MusculoskeletalPanel" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Neurological</div>
+    <div id="NeurologicalPanel" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Ophthalmological</div>
+    <div id="OphthalmologicalPanel" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Pulmonary</div>
+    <div id="PulmonaryPanel" class="panel"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="label">Urological</div>
+    <div id="UrologicalPanel" class="panel"></div>
+  </div>
+
+  <div class="container">
+    <div class="label">Women's Health</div>
+    <div id="WomenPanel" class="panel"></div>
+
+  </div>
+  </div>
+</div>
+</div>
   <div id="logoDiv" class="esri-widget"><img src="https://fusf.maps.arcgis.com/sharing/rest/content/items/fda648e3b9864734a9c18520b6a5ba82/data"></div> 
 </div>
   <div id="viewDiv">  </div>
