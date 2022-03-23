@@ -22,6 +22,7 @@
       height: 100%;
       width: 80%;
     }
+
       #logoDiv {
        width: 100%;
        height: auto;
@@ -95,7 +96,9 @@
   
   .accordion .label {
     position: relative;
+    font-weight: bold;
     padding: 2.5px 0;
+    padding-left: 5px;
     color: black;
     cursor: pointer;
   }
@@ -103,10 +106,11 @@
 
 .accordion .label::before {
   content: '+';
+  font-weight: bold;
   color: black;
   position: absolute;
   top: 50%;
-  left: -10px;
+  left: -5px;
   transform: translateY(-50%);
 }
 
@@ -197,9 +201,9 @@
       //setup pop-ups
       const popupCondition = {
         "title": "{Name}",
-        //"content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Website:</b></TD><TD><A HREF=\"{Website}\">View</A></TD></TR><TR><TD><b>More Info:</b></TD><TD><A HREF=\"{FUSF_Website}\">View</A></TD></TR><TR><TD><b>Condition(s):</b></TD><TD>{Indication_List}</TD></TR></Table>"      
-        "content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Treatment Info:</b></TD><TD>{TreatmentInfo}</TD></TR><TR><TD><b>Research Info:</b></TD><TD>{ResearchInfo}</TD></TR></Table>"      
-   
+        //"content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Treatment Info:</b></TD><TD>{TreatmentInfo}</TD></TR><TR><TD><b>Research Info:</b></TD><TD>{ResearchInfo}</TD></TR></Table>"      
+        "content": "<B>{Address} - <A HREF=\"{Directions}\">Map</A><HR>{TreatmentInfo}<BR><BR>{ResearchInfo}"
+
       }
 
   
@@ -540,61 +544,61 @@ return queryString;
     <div class="accordion">
 
 
-    <div class="container">
+    <div class="container active">
       <div class="label">Cardiovascular</div>
       <div id="CardiovascularPanel" class="panel"></div>
   </div>
 
   
 
-  <div class="container"> 
+  <div class="container active"> 
     <div class="label">Endocrine Disorders</div>
     <div id="EndocrinePanel" class="panel"></div>
   </div>
   
  
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Gastrointestinal</div>
     <div id="GastrointestinalPanel" class="panel"></div>
 
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Miscellaneous</div>
     <div id="MiscellaneousPanel" class="panel"></div>
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Musculoskeletal</div>
     <div id="MusculoskeletalPanel" class="panel"></div>
 
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Neurological</div>
     <div id="NeurologicalPanel" class="panel"></div>
 
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Ophthalmological</div>
     <div id="OphthalmologicalPanel" class="panel"></div>
 
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Pulmonary</div>
     <div id="PulmonaryPanel" class="panel"></div>
 
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Urological</div>
     <div id="UrologicalPanel" class="panel"></div>
   </div>
 
-  <div class="container">
+  <div class="container active">
     <div class="label">Women's Health</div>
     <div id="WomenPanel" class="panel"></div>
 
