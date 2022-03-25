@@ -97,6 +97,7 @@
   .accordion .label {
     position: relative;
     font-weight: bold;
+    font-size: 1.2em;
     padding: 2.5px 0;
     padding-left: 5px;
     color: black;
@@ -202,7 +203,7 @@
       const popupCondition = {
         "title": "{Name}",
         //"content": "<Table><TR><TD><b>Address:</b></TD><TD>{Address}</TD></TR><TR><TD><b>Directions:</b></TD><TD><A HREF=\"{Directions}\">View</A></TD></TR><TR><TD><b>Treatment Info:</b></TD><TD>{TreatmentInfo}</TD></TR><TR><TD><b>Research Info:</b></TD><TD>{ResearchInfo}</TD></TR></Table>"      
-        "content": "<B>{Address} - <A HREF=\"{Directions}\">Map</A><HR>{TreatmentInfo}<BR><BR>{ResearchInfo}"
+        "content": "<B>{Address} - <A HREF=\"{Directions}\" style=\"color:#0000FF;\">Map</A><HR>{TreatmentInfo}<BR><BR>{ResearchInfo}"
 
       }
 
@@ -383,7 +384,7 @@ function uv (bool){
 //setup menu div
     
     $("#menu").append($("<h3>Conditions</h3>"));
-    $("#menu").append($("<p>Use the checkboxes below to display focused ultrasound treatment and research sites around the world according to the conditions being addressed.</p>"));
+    $("#menu").append($("<p>Initial view has all conditions selected, use clear button to select individual conditions as needed.<BR>Click on categories to expand/collapse.</p>"));
     $("#menu").append($("<input>").attr({type: 'button', id: 'clearButton', value: 'Clear'}));
     $("#menu").append($("<input>").attr({type: 'button', id: 'selectAllButton', value: 'Select All'}));
     document.getElementById("clearButton").addEventListener("click",function(){
